@@ -8,6 +8,7 @@
 #include "Level.h"
 #include "Framework/AudioManager.h"
 #include "Framework/GameState.h"
+#include "Menu.h"
 
 void windowProcess(sf::RenderWindow* window, Input* in)
 {
@@ -73,7 +74,11 @@ int main()
 	AudioManager audioManager;
 	Input input;
 	GameState gameState;
+
 	Level level(&window, &input, &gameState, &audioManager);
+	Menu menu(&window, &input, &gameState, &audioManager);
+
+
 
 	// Initialise objects for delta time
 	sf::Clock clock;
@@ -90,9 +95,19 @@ int main()
 		deltaTime = clock.restart().asSeconds();
 
 		// Call standard game loop functions (input, update and render)
-		level.handleInput(deltaTime);
-		level.update(deltaTime);
-		level.render();
+		switch (gameState.getCurrentState())
+		{
+		case(State::MENU):
+			menu.handleInput(deltaTime);
+			menu.update(deltaTime);
+			menu.render();
+		case(State::LEVEL):
+			level.handleInput(deltaTime);
+			level.update(deltaTime);
+			level.render();
+		}
+		
+		
 
 		// Update input class, handle pressed keys
 		// Must be done last.
