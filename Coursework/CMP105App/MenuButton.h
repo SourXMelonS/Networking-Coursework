@@ -18,5 +18,5 @@ public:
 private:
 	Texture textureHover;
 };
-};
+
 

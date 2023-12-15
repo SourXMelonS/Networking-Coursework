@@ -9,6 +9,7 @@
 #include "Framework/AudioManager.h"
 #include "Framework/GameState.h"
 #include "Menu.h"
+#include "Client.h"
 
 void windowProcess(sf::RenderWindow* window, Input* in)
 {
@@ -69,6 +70,7 @@ int main()
 {
 	//Create the window
 	sf::RenderWindow window(sf::VideoMode(1200, 675), "CMP105_Coursework");
+	sf::TcpSocket Tcp;
 
 	// Initialise input and level objects.
 	AudioManager audioManager;
@@ -101,6 +103,8 @@ int main()
 			menu.handleInput(deltaTime);
 			menu.update(deltaTime);
 			menu.render();
+		case(State::HOST):
+			//server_.Init();
 		case(State::LEVEL):
 			level.handleInput(deltaTime);
 			level.update(deltaTime);
