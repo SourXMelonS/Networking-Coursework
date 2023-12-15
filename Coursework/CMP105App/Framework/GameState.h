@@ -15,6 +15,9 @@ public:
 	// Returns the current state.
 	State getCurrentState();
 
+	
+
 protected:
 	State currentState;
+	
 };

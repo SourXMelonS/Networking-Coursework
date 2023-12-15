@@ -7,9 +7,9 @@ Menu::Menu(RenderWindow* hwnd, Input* in, GameState* gs, AudioManager* aud)
 	audio = aud;
 	gameState = gs;
 
-	backgroundTexture.loadFromFile("gfx/...");
-	hostTexture.loadFromFile("gfx/...");
-	joinTexture.loadFromFile("gfx/...");
+	backgroundTexture.loadFromFile("gfx/....png");
+	hostTexture.loadFromFile("gfx/....png");
+	joinTexture.loadFromFile("gfx/....png");
 
 	menuBackground.setSize(Vector2f(window->getSize().x, window->getSize().y));
 	menuBackground.setTexture(&backgroundTexture);
@@ -18,9 +18,9 @@ Menu::Menu(RenderWindow* hwnd, Input* in, GameState* gs, AudioManager* aud)
 	joinButton = MenuButton(joinTexture, input, window, 2);
 
 
-	font.loadFromFile("font/m6x11.ttf");
+	font.loadFromFile("font/arial.ttf");
 
-	if (!font.loadFromFile("font/m6x11.ttf"))
+	if (!font.loadFromFile("font/arial.ttf"))
 	{
 		std::cout << "Font not found" << std::endl;
 	}
@@ -30,7 +30,7 @@ Menu::Menu(RenderWindow* hwnd, Input* in, GameState* gs, AudioManager* aud)
 	gameName.setFillColor(Color::Color(255, 176, 102));
 	gameName.setPosition(window->getSize().x / 2 - 350, 100);
 
-
+	gameName.setString("Generic Racing Game");
 }
 Menu::~Menu()
 {
@@ -101,7 +101,7 @@ void Menu::update(float dt)
 void Menu::render()
 {
 	//Game title
-	gameName.setString("Generic Recing Game");
+	
 	
 	beginDraw();
 	window->draw(menuBackground);

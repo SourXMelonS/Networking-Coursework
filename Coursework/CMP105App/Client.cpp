@@ -13,11 +13,11 @@ Client::Client(sf::IpAddress& ip, unsigned short& port, Player& p, std::string& 
 
 void Update(Input* input_, sf::Event* event_, Player* player_, float dt)
 {
-	TCPRecieve();
+	//TCPRecieve();
 
-	UDP_sendPosition(player_, input_, dt);
+	//UDP_sendPosition(player_, input_, dt);
 
-	UDPRecieve(player_);
+	//UDPRecieve(player_);
 }
 
 void Client::Init()

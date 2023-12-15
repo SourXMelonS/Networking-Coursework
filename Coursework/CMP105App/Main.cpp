@@ -77,15 +77,15 @@ int main()
 	Input input;
 	GameState gameState;
 
-	Level level(&window, &input, &gameState, &audioManager);
+	Level* level;
+	level = new Level(&window, &input, &gameState, &audioManager);
 	Menu menu(&window, &input, &gameState, &audioManager);
-
 
 
 	// Initialise objects for delta time
 	sf::Clock clock;
 	float deltaTime;
-
+	gameState.setCurrentState(State::MENU);
 	// Game Loop
 	while (window.isOpen())
 	{
@@ -95,7 +95,7 @@ int main()
 		// Calculate delta time. How much time has passed 
 		// since it was last calculated (in seconds) and restart the clock.
 		deltaTime = clock.restart().asSeconds();
-
+		
 		// Call standard game loop functions (input, update and render)
 		switch (gameState.getCurrentState())
 		{
@@ -106,9 +106,9 @@ int main()
 		case(State::HOST):
 			//server_.Init();
 		case(State::LEVEL):
-			level.handleInput(deltaTime);
-			level.update(deltaTime);
-			level.render();
+			level->handleInput(deltaTime);
+			level->update(deltaTime);
+			level->render();
 		}
 		
 		
