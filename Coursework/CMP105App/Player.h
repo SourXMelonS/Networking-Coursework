@@ -4,10 +4,11 @@
 #include "Framework/Input.h"
 #include "Framework/Collision.h"
 #include <string>
+#include <sstream>     
 #include <iostream>
-#include "Client.h"
-#include "Player.h"
-#include "Menu.h"
+#include <stdlib.h>
+#include <time.h>
+
 using namespace sf;
 
 class Player : public GameObject
@@ -17,17 +18,18 @@ public:
 	~Player();
 	void init(Input* input, RenderWindow* window);
 	void handleInput(float dt) override;
-	void update(float dt, sf::Event* Event_);
-	void clientInput(sf::Event* Event_);
+	void update(float dt);
 	void collisionResponce(GameObject* collider);
-	bool connected() { return connected_succesfully; };
 
-
+	RectangleShape playerBody;
 	FloatRect getCollisionBox();
 	void render();
 
 	Vector2f playerStartPos;
 	Vector2f playerPos;
+	Vector2f playerNextPos;
+
+	int m_id;
 private:
 	RenderWindow* window;
 

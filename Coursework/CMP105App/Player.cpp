@@ -16,13 +16,20 @@ void Player::init(Input* input, RenderWindow* win)
 	setInput(input);
 	setWindow(win);
 
-	txtr.loadFromFile("gfx/");
+	//txtr.loadFromFile("gfx/");
 
-	setSize(Vector2f(32, 32));
+	setSize(Vector2f(16, 32));
 	setPosition(Vector2f(100, 100));
 	setVelocity(0, 0);
+	setOutlineThickness(2);
+	setOutlineColor(sf::Color(0, 0, 0, 255));
+	setFillColor(sf::Color(255, 0, 0, 255));
 	collisionBox = FloatRect(0, 0, 16, 32);
 
+	//playerBody.setFillColor(sf::Color(255, 0, 0, 255));
+	//playerBody.setOutlineThickness(2);
+	//playerBody.setOutlineColor(sf::Color(0, 0, 0, 255));
+	//setCollisionBox();
 	scale = 70.f;
 	gravity = Vector2f(0, 9.8f);
 }
@@ -80,4 +87,5 @@ FloatRect Player::getCollisionBox()
 
 void Player::render()
 {
+	
 }

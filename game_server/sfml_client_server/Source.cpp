@@ -10,7 +10,7 @@ void ServerInit()
 }
 int main()
 {
-	std::cout << "Server is starting \n\n";
+	std::cout << "Server is starting :3 \n";
 
 	ServerInit();
 

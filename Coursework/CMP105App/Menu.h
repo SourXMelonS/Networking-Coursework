@@ -9,7 +9,7 @@
 #include "MenuButton.h"
 #include <string>
 #include <iostream>
-
+#include <SFML/Network.hpp>
 using namespace sf;
 
 class Menu :
@@ -18,21 +18,45 @@ class Menu :
 public:
     Menu(RenderWindow* hwnd, Input* in, GameState* gs, AudioManager* aud);
     ~Menu();
+    void Init();
     void handleInput(float dt) override;
+    void handleInput(float dt, sf::Event* event_);
     void update(float dt) override;
-    void render();
+    void render() override;
+    void reset();
+    void enterName(sf::Event* event_);
+    void enterIp(sf::Event* event_);
+    void sendNameTCP();
+    sf::IpAddress getIp();
+    std::string getPlayerName();
 
 private:
+    bool connect_attempt = false;
+
     Texture backgroundTexture;
     Texture hostTexture;
     Texture joinTexture;
     Texture exitTexture;
-    Text gameName;
+    std::string ipEnterStr;
+    Text gameName, ipDisplay,ipEnter, nameEnter, nameDisplay;
     Font font;
-    MenuButton hostButton;
     MenuButton joinButton;
+    MenuButton playButton;
     MenuButton exitButton;
-    GameObject menuBackground;
+    GameObject menuBackground, ipTextBox, nameTextBox;
+
+    bool renderJoinGame = false;
+
+    std::string players;
+    std::string nameEnterStr;
+    sf::IpAddress server_Ip;
+    sf::TcpSocket* Tcp;
+    std::string ipName;
+
+    enum typeVar
+    {
+        sendName = 1,
+    };
 
     bool playedButton1 = false;
     bool playedButton2 = false;

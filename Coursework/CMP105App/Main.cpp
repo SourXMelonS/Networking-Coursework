@@ -12,6 +12,7 @@
 #include "Client.h"
 #include "Server.h"
 
+
 void windowProcess(sf::RenderWindow* window, Input* in)
 {
 	
@@ -32,12 +33,13 @@ int main()
 	Client client;
 	Player player;
 
-	Level* level;
-	level = new Level(&window, &input, &gameState, &audioManager);
+	Level level(&window, &input, &gameState, &audioManager, &Tcp);
+	//level = new Level(&window, &input, &gameState, &audioManager);
 	Menu menu(&window, &input, &gameState, &audioManager);
 
 	bool serverInitialised = false;
 	bool clientInitialised = false;
+	bool menuInitialised = false;
 	// Initialise objects for delta time
 	sf::Clock clock;
 	float deltaTime;
@@ -45,7 +47,7 @@ int main()
 	// Game Loop
 	while (window.isOpen())
 	{
-	
+		deltaTime = clock.restart().asSeconds() * 2;
 		// Handle window events.
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -96,7 +98,15 @@ int main()
 				// don't handle other events
 				break;
 			}
-
+			if (gameState.getCurrentState() == State::MENU)
+			{
+				if (menuInitialised == false)
+				{
+					menu.Init();
+					menuInitialised = true;
+				}
+				menu.handleInput(deltaTime, &event);
+			}
 			if (serverState.getCurrentServer() == IsServer::HOST)
 			{
 				if (serverInitialised == false)
@@ -115,27 +125,27 @@ int main()
 					client.Init();
 					clientInitialised == false;
 				}
-				client.Update(&input,event,&level->getPlayer(1),deltaTime);
+				//client.Update(&input,&event,&level.getPlayer(1),deltaTime);
 			}
 		}
 		// Calculate delta time. How much time has passed 
 		// since it was last calculated (in seconds) and restart the clock.
-		deltaTime = clock.restart().asSeconds()*2;
+		
 		
 		// Call standard game loop functions (input, update and render)
 		switch (gameState.getCurrentState())
 		{
 		case(State::MENU):
-			menu.handleInput(deltaTime);
+			//menu.handleInput(deltaTime,&event);
 			menu.update(deltaTime);
 			menu.render();
 			break;
 		case(State::HOST):
 			//server_.Init();
 		case(State::LEVEL):
-			level->handleInput(deltaTime);
-			level->update(deltaTime);
-			level->render();
+			level.handleInput(deltaTime);
+			level.update(deltaTime);
+			level.render();
 			break;
 		}
 		
