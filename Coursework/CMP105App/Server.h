@@ -7,8 +7,10 @@
 
 class Server
 {
+public:
 	void Init();
 	void Update();
+protected:
 	//------------------TCP FUNCTIONS
 	void TCP();
 	void TCPCommunicationHandler();

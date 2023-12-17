@@ -36,3 +36,8 @@ void Level::render()
 	endDraw();
 }
 
+Player Level::getPlayer(int player_)
+{
+	return player[player_];
+}
+

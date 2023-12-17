@@ -32,24 +32,24 @@ void Server::TCP()
 
 void Server::TCPCommunicationHandler()
 {
-	//sf::Packet disconnection_detector;
+
 	sf::TcpSocket* socket = new sf::TcpSocket;
-	if (listener.accept(*socket) != sf::Socket::Done)			//accepted a new connection
+	if (listener.accept(*socket) != sf::Socket::Done)			
 	{
 		std::cout << "error accepting new conn\n";
 	}
 	else
 	{
-		if (clients.size() < 20)				//maximum server size 20 (more can be handled, just change some things in the lower part of the code and change the variable
+		if (clients.size() < 2)	//maximum server size 2
 		{
-			selector.add(*socket);			//If connection is accepted, add the socket to the socket list
+			selector.add(*socket);			
 			sf::Packet name_packet;
 			std::string name;
-			if (socket->receive(name_packet) == sf::Socket::Done)			//If socket sends the name, extract it and store it to display who connected to the server
+			if (socket->receive(name_packet) == sf::Socket::Done) //store name to display who connected to the server
 			{
 				int type = 0;
 				name_packet >> type;
-				if (type == namePacket)			//Packet type is 1
+				if (type == namePacket)	//Packet type is 1
 				{
 					name_packet >> name;
 					std::cout << name << " has connected to the chat room. " << std::endl;			//display who connected
@@ -178,12 +178,12 @@ void Server::sendUDP(sf::Packet receivePosVar, int ID)			//Once you received pos
 	}
 }
 
-void Server::IdAndPositionSetter(sf::TcpSocket* sock, std::string name_)			//Called when new connections/player connected
+void Server::IdAndPositionSetter(sf::TcpSocket* sock, std::string name_)
 {
 	sf::Packet setupAsked;
 	int type;
 
-	if (sock->receive(setupAsked) == sf::Socket::Done)		//when the setup is asked
+	if (sock->receive(setupAsked) == sf::Socket::Done)	//when the setup is asked
 	{
 		setupAsked >> type;
 		if (type == idAsked)		//Send id

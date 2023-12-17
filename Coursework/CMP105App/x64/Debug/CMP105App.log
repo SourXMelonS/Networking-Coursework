@@ -1,25 +1,2 @@
-﻿  Menu.cpp
-C:\Users\camer\OneDrive\Documents\GitHub\Cmp303-coursework\Coursework\CMP105App\Menu.cpp(14,72): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-          with
-          [
-              T=unsigned int
-          ]
-          and
-          [
-              T=float
-          ]
-C:\Users\camer\OneDrive\Documents\GitHub\Cmp303-coursework\Coursework\CMP105App\Menu.cpp(14,51): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-          with
-          [
-              T=unsigned int
-          ]
-          and
-          [
-              T=float
-          ]
-C:\Users\camer\OneDrive\Documents\GitHub\Cmp303-coursework\Coursework\CMP105App\Menu.cpp(31,47): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-          with
-          [
-              T=unsigned int
-          ]
-  CMP105App.vcxproj -> C:\Users\camer\OneDrive\Documents\GitHub\Cmp303-coursework\Coursework\x64\Debug\CMP105App.exe
+﻿  Main.cpp
+  CMP105App.vcxproj -> C:\Users\camer\Documents\GitHub\cmp303-coursework-SourXMelonS\Cmp303-coursework\Coursework\x64\Debug\CMP105App.exe

@@ -7,18 +7,18 @@
 #include <iostream>
 #include <stdlib.h>
 #include "Player.h"
-//#include "GraphicsTools.h"
 #include "Framework/Collision.h"
 #include <queue>
 
 class Client
 {
 public:
+	Client();
 	Client(sf::IpAddress& ip, unsigned short& port, Player& p, std::string& name, sf::TcpSocket* socket, sf::RenderWindow* window);
 	~Client();
 	void Init();
 	void HandleInput(sf::Event* Ev, Input* input, Player* p);		//Handle Input for inputs 
-	void Update(Input* input, sf::Event* Ev, Player* p, float dt);
+	void Update(Input* input, sf::Event* Ev,Player* p, float dt);
 	void Render();
 	void disconnect(Player* p, Input* input);		//Disconnect once esc is pressed
 	void Setup(Player* p);
@@ -32,6 +32,10 @@ public:
 	void UDPReceive(Player* p);
 	void interpolateEnemyPos(Player* Player, float dt);
 	void CheckCollision(Player* p);
+
+	void askSetup();
+	void coinPosGetter();
+	bool getConnectedStatus();
 
 protected:
 	std::string name;
