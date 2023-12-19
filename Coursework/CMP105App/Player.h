@@ -19,7 +19,7 @@ public:
 	//void init(Input* input, RenderWindow* window);
 	void Init();
 	void handleInput(Input* input,float dt);
-	void update();
+	void update(float dt);
 	void collisionResponce(GameObject* collider);
 
 	RectangleShape playerBody;

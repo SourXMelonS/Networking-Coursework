@@ -1,6 +1,6 @@
-﻿  Source.cpp
-  server.cpp
-C:\Users\camer\Documents\GitHub\cmp303-coursework-SourXMelonS\Cmp303-coursework\game_server\sfml_client_server\server.cpp(12,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\camer\Documents\GitHub\cmp303-coursework-SourXMelonS\Cmp303-coursework\game_server\sfml_client_server\server.cpp(71,14): warning C4101: 'dummy': unreferenced local variable
+﻿  server.cpp
+C:\Users\camer\OneDrive\Documents\GitHub\Cmp303-coursework\game_server\sfml_client_server\server.cpp(12,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\camer\OneDrive\Documents\GitHub\Cmp303-coursework\game_server\sfml_client_server\server.cpp(71,14): warning C4101: 'dummy': unreferenced local variable
+  Source.cpp
   Generating Code...
-  sfml_client_server.vcxproj -> C:\Users\camer\Documents\GitHub\cmp303-coursework-SourXMelonS\Cmp303-coursework\game_server\x64\Debug\sfml_client_server.exe
+  sfml_client_server.vcxproj -> C:\Users\camer\OneDrive\Documents\GitHub\Cmp303-coursework\game_server\x64\Debug\sfml_client_server.exe

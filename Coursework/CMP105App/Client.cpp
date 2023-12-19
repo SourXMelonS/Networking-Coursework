@@ -23,6 +23,9 @@ Client::~Client()
 
 void Client::Update(Input* input_, sf::Event* Ev,Player* player_, float dt)
 {
+
+	deltaTime = dt;
+
 	TCPReceive();
 
 	UDP_sendPosition(player_, input_, dt);
@@ -37,6 +40,7 @@ void Client::Update(Input* input_, sf::Event* Ev,Player* player_, float dt)
 	CheckCollision(player_);
 
 	disconnect(player_, input_);
+
 }
 
 /*void Client::Init()
@@ -120,11 +124,11 @@ void Client::Update(Input* input_, sf::Event* Ev,Player* player_, float dt)
 
 void Client::HandleInput(sf::Event* Ev, Input* input, Player* p)
 {
-	if (input->isKeyDown(sf::Keyboard::Enter) && open_chat == false)		
+	if (input->isKeyDown(sf::Keyboard::T) && open_chat == false)		
 	{
 		//Chat opens
 		std::cout << "Chat should be open\n";
-		input->setKeyUp(sf::Keyboard::Enter);
+		input->setKeyUp(sf::Keyboard::T);
 		open_chat = true;		
 		chat_empty_on_open = true;		
 	}
@@ -330,7 +334,7 @@ void Client::UDPReceive(Player* p)
 			updated_pos >> gameTime;
 		}
 	}
-	if (type == receiveEnemyPos)		//RECEIVES UPDATED ENEMY POSITIONS
+	if (type == recieveOpponentPos)		//RECEIVES UPDATED ENEMY POSITIONS
 	{
 		updated_pos >> opponentID;
 
@@ -343,7 +347,7 @@ void Client::UDPReceive(Player* p)
 					updated_pos >> opponents.at(i).nextPos.x >> opponents.at(i).nextPos.y;		//Updated enemy position for each enemy
 					//enemies.at(i).setPosition(enemies.at(i).next_pos.x, enemies.at(i).next_pos.y);		//SET POSITION TO NEW POSITION, CHANGE FOR INTERPOLATION
 					lerpAlpha = 0;			//Alpha is reset
-					opponents.at(i).update();
+					opponents.at(i).update(deltaTime);
 					knowHim = true;
 				}
 			}
@@ -378,7 +382,7 @@ sf::Vector2f lerp(sf::Vector2f oldPos, sf::Vector2f newPos, float alpha)		//inte
 void Client::interpolateOpponentPos(Player* opponent, float dt)
 {
 	lerpAlpha += dt;		
-	std::cout << opponent->getPosition().x << "   " << opponent->getPosition().y << "NEWPOS: " << opponent->nextPos.x << "    " << opponent->nextPos.y << "\n";
+	//std::cout << opponent->getPosition().x << "   " << opponent->getPosition().y << "NEWPOS: " << opponent->nextPos.x << "    " << opponent->nextPos.y << "\n";
 	opponent->setPosition(lerp(opponent->getPosition(), opponent->nextPos, lerpAlpha));
 }
 

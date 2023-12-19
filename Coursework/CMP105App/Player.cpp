@@ -45,9 +45,8 @@ void Player::handleInput(Input* input,float dt)
 	if (input->isKeyDown(sf::Keyboard::D))
 	{
 		if (velocity.x >= -20)
-		{
 			velocity.x -= 2;
-		}
+		
 	}
 	if (input->isKeyDown(sf::Keyboard::W))
 	{
@@ -61,16 +60,15 @@ void Player::handleInput(Input* input,float dt)
 	}
 	else
 	{
-		if (velocity.y > 0)
-			velocity.y -= 10 - (2 * (velocity.y / 100));
+		//velocity = sf::Vector2f(0, 0);
 	}
 }
 
-void Player::update()
+void Player::update(float dt)
 {
 	//velocity += gravity * dt * scale / 2.f;
-	playerBody.setPosition(getPosition().x + 4, getPosition().y + 4);
-	//move(velocity);
+	//playerBody.setPosition(getPosition().x + 4, getPosition().y + 4);
+	move(velocity * dt);
 }
 
 void Player::collisionResponce(GameObject* collider)

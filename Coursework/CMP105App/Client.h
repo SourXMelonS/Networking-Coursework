@@ -75,19 +75,19 @@ protected:
 	bool connected_;
 	bool open_chat;		//Bool for knowing if the chat is open
 	bool chat_empty_on_open;	//Bool for properly switch vars
-	bool is_chat_open;
+	bool is_chat_open = false;
 	bool render_preStart = true;
 	bool canMove = false;
 	bool renderGameStartedElements = false;
 	float lerpAlpha;
-
+	float deltaTime;
 	Vector2f coinPos[20];
 	enum dataInfo				//Enum to avoid putting only numbers in the different packet types
 	{
 		askForSetup = 19,
 		sendPlayerPos = 3,
 		gameTimeReceive = 2,
-		receiveEnemyPos = 7,
+		recieveOpponentPos = 7,
 		coinHasBeenPicked = 9,
 		sendDisconnection = 6,
 		IdReceived = 1,

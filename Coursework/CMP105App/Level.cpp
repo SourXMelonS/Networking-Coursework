@@ -51,7 +51,7 @@ void Level::handleInput(float dt)
 
 void Level::update(float dt)
 {
-	
+
 }
 
 // Update game objects
@@ -65,10 +65,10 @@ void Level::update(float dt, sf::Event* event_)
 	if (connected_succesfully == true)
 	{
 		client_->Update(input, event_, &player, dt);
-		player.update();
+		player.update(dt);
 		for (int i = 0; i < opponents.size(); i++)
 		{
-			opponents.at(i).update();
+			opponents.at(i).update(dt);
 			opponents.at(i).setPosition(client_->getClientPos(i));
 		}
 	}
@@ -76,6 +76,7 @@ void Level::update(float dt, sf::Event* event_)
 
 void Level::clientInput(sf::Event* event_)
 {
+	client_->HandleInput(event_, input, &player);
 }
 
 // Render level
