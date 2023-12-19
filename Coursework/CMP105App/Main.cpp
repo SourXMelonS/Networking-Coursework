@@ -10,7 +10,6 @@
 #include "Framework/GameState.h"
 #include "Menu.h"
 #include "Client.h"
-#include "Server.h"
 
 
 void windowProcess(sf::RenderWindow* window, Input* in)
@@ -27,20 +26,17 @@ int main()
 	// Initialise input and level objects.
 	AudioManager audioManager;
 	Input input;
-	GameState gameState, serverState;
+	GameState gameState;
 
-	Server server;
-	Client client;
-	Player player;
 
 	Level level(&window, &input, &gameState, &audioManager, &Tcp);
 	//level = new Level(&window, &input, &gameState, &audioManager);
-	Menu menu(&window, &input, &gameState, &audioManager);
+	Menu menu(&window, &input, &gameState, &Tcp);
 
-	bool serverInitialised = false;
-	bool clientInitialised = false;
+	bool levelInit = false;
 	bool menuInitialised = false;
 	// Initialise objects for delta time
+
 	sf::Clock clock;
 	float deltaTime;
 	gameState.setCurrentState(State::MENU);
@@ -98,6 +94,14 @@ int main()
 				// don't handle other events
 				break;
 			}
+			if (gameState.getCurrentState() == State::LEVEL)
+			{
+				if (level.getConnectedStatus() == false)
+				{
+					level.Init(&menu);
+				}
+				level.clientInput(&event);
+			}
 			if (gameState.getCurrentState() == State::MENU)
 			{
 				if (menuInitialised == false)
@@ -105,55 +109,30 @@ int main()
 					menu.Init();
 					menuInitialised = true;
 				}
-				menu.handleInput(deltaTime, &event);
+				menu.handleInput(&event);
 			}
-			if (serverState.getCurrentServer() == IsServer::HOST)
-			{
-				if (serverInitialised == false)
-				{
-					std::cout << " Server is starting\n";
-					server.Init();
-					serverInitialised = true;
-				}
-				server.Update();
-			}
-			if (serverState.getCurrentServer() == IsServer::CLIENT)
-			{
-				if (clientInitialised == false)
-				{
-					std::cout << " Loading Client\n";
-					client.Init();
-					clientInitialised == false;
-				}
-				//client.Update(&input,&event,&level.getPlayer(1),deltaTime);
-			}
+			
 		}
-		// Calculate delta time. How much time has passed 
-		// since it was last calculated (in seconds) and restart the clock.
 		
 		
 		// Call standard game loop functions (input, update and render)
 		switch (gameState.getCurrentState())
 		{
 		case(State::MENU):
-			//menu.handleInput(deltaTime,&event);
 			menu.update(deltaTime);
 			menu.render();
 			break;
-		case(State::HOST):
-			//server_.Init();
 		case(State::LEVEL):
 			level.handleInput(deltaTime);
-			level.update(deltaTime);
+			level.update(deltaTime, &event);
 			level.render();
 			break;
 		}
 		
-		
 
 		// Update input class, handle pressed keys
 		// Must be done last.
-		input.update();
+		//input.update();
 	}
 
 }

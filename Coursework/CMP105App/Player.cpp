@@ -10,36 +10,54 @@ Player::~Player()
 {
 }
 
-void Player::init(Input* input, RenderWindow* win)
-{
-	window = win;
-	setInput(input);
-	setWindow(win);
+//void Player::init(Input* input, RenderWindow* win)
+//{
+//	window = win;
+//	setInput(input);
+//	setWindow(win);
 
 	//txtr.loadFromFile("gfx/");
 
-	setSize(Vector2f(16, 32));
-	setPosition(Vector2f(100, 100));
-	setVelocity(0, 0);
-	setOutlineThickness(2);
-	setOutlineColor(sf::Color(0, 0, 0, 255));
-	setFillColor(sf::Color(255, 0, 0, 255));
-	collisionBox = FloatRect(0, 0, 16, 32);
+//	srand(time(NULL));
+	
+//
+//}
 
-	//playerBody.setFillColor(sf::Color(255, 0, 0, 255));
-	//playerBody.setOutlineThickness(2);
-	//playerBody.setOutlineColor(sf::Color(0, 0, 0, 255));
-	//setCollisionBox();
-	scale = 70.f;
-	gravity = Vector2f(0, 9.8f);
+void Player::Init()
+{
+	playerBody.setSize(Vector2f(16, 32));
+	playerBody.setPosition(Vector2f(100, 100));
+	
+	playerBody.setOutlineThickness(2);
+	playerBody.setOutlineColor(sf::Color(0, 0, 0, 255));
+	playerBody.setFillColor(sf::Color(255, 0, 0, 255));
+	//collisionBox = FloatRect(0, 0, 16, 32);
+	srand(time(NULL));
 }
 
-void Player::handleInput(float dt)
+void Player::handleInput(Input* input,float dt)
 {
+	if (input->isKeyDown(sf::Keyboard::A))
+	{
+		if (velocity.x <= 20)
+			velocity.x += 2;
+	}
+	if (input->isKeyDown(sf::Keyboard::D))
+	{
+		if (velocity.x >= -20)
+		{
+			velocity.x -= 2;
+		}
+	}
 	if (input->isKeyDown(sf::Keyboard::W))
 	{
-		if(velocity.y <= 200)
-			velocity.y +=5;
+		if(velocity.y <= 20)
+			velocity.y += 2;
+	}
+	if (input->isKeyDown(sf::Keyboard::S))
+	{
+		if (velocity.y >= -20)
+			velocity.y -= 2;
 	}
 	else
 	{
@@ -48,11 +66,11 @@ void Player::handleInput(float dt)
 	}
 }
 
-void Player::update(float dt)
+void Player::update()
 {
 	//velocity += gravity * dt * scale / 2.f;
-
-	move(velocity * dt);
+	playerBody.setPosition(getPosition().x + 4, getPosition().y + 4);
+	//move(velocity);
 }
 
 void Player::collisionResponce(GameObject* collider)
@@ -85,7 +103,7 @@ FloatRect Player::getCollisionBox()
 	return collisionBox;
 }
 
-void Player::render()
+void Player::render(sf::RenderWindow* window_)
 {
-	
+	window_->draw(playerBody);
 }

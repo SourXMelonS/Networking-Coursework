@@ -10,17 +10,18 @@
 #include <string>
 #include <iostream>
 #include <SFML/Network.hpp>
+
 using namespace sf;
 
 class Menu :
     public BaseLevel
 {
 public:
-    Menu(RenderWindow* hwnd, Input* in, GameState* gs, AudioManager* aud);
+    Menu(RenderWindow* hwnd, Input* in, GameState* gs, TcpSocket* sock);
     ~Menu();
     void Init();
     void handleInput(float dt) override;
-    void handleInput(float dt, sf::Event* event_);
+    void handleInput(sf::Event* event_);
     void update(float dt) override;
     void render() override;
     void reset();
@@ -49,9 +50,11 @@ private:
 
     std::string players;
     std::string nameEnterStr;
+    std::string ipNameStr;
+
     sf::IpAddress server_Ip;
     sf::TcpSocket* Tcp;
-    std::string ipName;
+    
 
     enum typeVar
     {

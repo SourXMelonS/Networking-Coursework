@@ -4,6 +4,7 @@
 #include "Framework/BaseLevel.h"
 #include "Player.h"
 #include "Client.h"
+#include "Menu.h"
 #include <string>
 #include <iostream>
 
@@ -18,8 +19,8 @@ public:
 	void update(float dt, sf::Event*  event_);
 	void clientInput(sf::Event* event_);
 	void render();
-	void Init();
-	//Player getPlayer(int player_);
+	void Init(Menu* menu_);
+
 	bool getConnectedStatus() { return connected_succesfully; };
 private:
 	// Default functions for rendering to the screen.
@@ -28,6 +29,8 @@ private:
 	std::unique_ptr<Client> client_;
 
 	Player player;
+	std::vector<Player> opponents;
+	Menu* menu;
 
 	unsigned short port;
 	sf::IpAddress IP_ADDRESS;

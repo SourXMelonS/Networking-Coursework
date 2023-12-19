@@ -16,26 +16,28 @@ class Player : public GameObject
 public:
 	Player();
 	~Player();
-	void init(Input* input, RenderWindow* window);
-	void handleInput(float dt) override;
-	void update(float dt);
+	//void init(Input* input, RenderWindow* window);
+	void Init();
+	void handleInput(Input* input,float dt);
+	void update();
 	void collisionResponce(GameObject* collider);
 
 	RectangleShape playerBody;
 	FloatRect getCollisionBox();
-	void render();
+	void render(sf::RenderWindow* window_);
 
 	Vector2f playerStartPos;
 	Vector2f playerPos;
 	Vector2f playerNextPos;
+	Vector2f nextPos = Vector2f(0, 0);		
 
-	int m_id;
+	float tempT;				
+	int score;
+	int id;
 private:
-	RenderWindow* window;
-
+	//RenderWindow* window;
 	Texture txtr;
-	float scale;
-	Vector2f gravity;
+
 	
 };
 
