@@ -183,7 +183,7 @@ void Client::HandleInput(sf::Event* Ev, Input* input, Player* p)
 void Client::Render()
 {
 	textSetup(window_);
-	for (int i = 0; i <= 10; i++)
+	for (int i = 0; i < 20; i++)
 	{
 		coins[i].Render(window_);
 	}
@@ -264,6 +264,8 @@ void Client::ID_And_Positions_Getter()
 			Id_Getter >> player.playerStartPos.x >> player.playerStartPos.y;
 		}
 	}
+
+	coinPosGetter();
 }
 
 void Client::textSetup(sf::RenderWindow* window)
@@ -333,37 +335,38 @@ void Client::UDPReceive(Player* p)
 		{
 			updated_pos >> gameTime;
 		}
-	}
-	if (type == recieveOpponentPos)		//RECEIVES UPDATED ENEMY POSITIONS
-	{
-		updated_pos >> opponentID;
-
-		if (id_getter != opponentID)			//IF THE ID RECEIVED IS NOT THE MAIN PLAYER ONE, THEN UPDATE OTHER PLAYERS POSTIONS
+		if (type == recieveOpponentPos)		//RECEIVES UPDATED ENEMY POSITIONS
 		{
-			bool knowHim = false;
-			for (int i = 0; i < opponents.size(); i++) {
-				if (opponents.at(i).id == opponentID) {		//IF ENEMY 
-					updated_pos >> opponents.at(i).tempT;			//TIME RECEIVED FROM PLAYERS POSITIONS
-					updated_pos >> opponents.at(i).nextPos.x >> opponents.at(i).nextPos.y;		//Updated enemy position for each enemy
-					//enemies.at(i).setPosition(enemies.at(i).next_pos.x, enemies.at(i).next_pos.y);		//SET POSITION TO NEW POSITION, CHANGE FOR INTERPOLATION
-					lerpAlpha = 0;			//Alpha is reset
-					opponents.at(i).update(deltaTime);
-					knowHim = true;
+			updated_pos >> opponentID;
+
+			if (id_getter != opponentID)			//IF THE ID RECEIVED IS NOT THE MAIN PLAYER ONE, THEN UPDATE OTHER PLAYERS POSTIONS
+			{
+				bool knowHim = false;
+				for (int i = 0; i < opponents.size(); i++) {
+					if (opponents.at(i).id == opponentID) {		//IF ENEMY 
+						updated_pos >> opponents.at(i).tempT;			//TIME RECEIVED FROM PLAYERS POSITIONS
+						updated_pos >> opponents.at(i).nextPos.x >> opponents.at(i).nextPos.y;		//Updated enemy position for each enemy
+						//enemies.at(i).setPosition(enemies.at(i).next_pos.x, enemies.at(i).next_pos.y);		//SET POSITION TO NEW POSITION, CHANGE FOR INTERPOLATION
+						lerpAlpha = 0;			//Alpha is reset
+						opponents.at(i).update(deltaTime);
+						knowHim = true;
+					}
 				}
+				if (!knowHim) {		//If the enemy is not known
+					Player temp;			//Create a temporary player
+					temp.Init();			//Initialise him
+					temp.setFillColor(sf::Color::Blue);
+					temp.id = opponentID;			//Set its id to the new one
+					sf::Vector2f rec_pos;
+					updated_pos >> rec_pos.x >> rec_pos.y;			//Starting position of new player connected
+					temp.setPosition(rec_pos);
+					opponents.push_back(temp);			//Add him to enemy vector
+					someoneJoined = true;
+				}															//	m_Messages.push_back(Player2.next_pos);					//Message history for prediction.
 			}
-			if (!knowHim) {		//If the enemy is not known
-				Player temp;			//Create a temporary player
-				temp.Init();			//Initialise him
-				temp.setFillColor(sf::Color::Blue);
-				temp.id = opponentID;			//Set its id to the new one
-				sf::Vector2f rec_pos;
-				updated_pos >> rec_pos.x >> rec_pos.y;			//Starting position of new player connected
-				temp.setPosition(rec_pos);
-				opponents.push_back(temp);			//Add him to enemy vector
-				someoneJoined = true;
-			}															//	m_Messages.push_back(Player2.next_pos);					//Message history for prediction.
 		}
 	}
+	
 	if (type == coinHasBeenPicked)				//SOMEONE PICKED A COIN
 	{
 		int coinNum;

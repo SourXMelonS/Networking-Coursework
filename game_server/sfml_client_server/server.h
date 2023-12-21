@@ -22,7 +22,7 @@ public:
 	void BindUDP();
 	void receiveUDP();
 	void sendUDP(sf::Packet receivePosVar,int ID);
-	//void coinPickedEvent(sf::Packet pack, int id);
+	void coinPickedEvent(sf::Packet pack, int id);
 	//void checkDisconnections(sf::TcpSocket* sock);
 	void sendTime();
 
@@ -64,7 +64,7 @@ protected:
 	sf::Packet boxPosPacket;
 	bool genDone=false;
 
-	sf::Vector2f boxPos[10];			//how many coins
+	sf::Vector2f coinPos[10];			//how many coins
 
 	enum types
 	{
@@ -76,7 +76,7 @@ protected:
 		udpPosSent = 7,
 		idAsked = 19,
 		idSet = 1,
-		boxGen = 2,
+		coinGen = 2,
 		coinPickedsendToClients = 9,
 		sendStartGameType = 5,
 		sendTimeType = 2,

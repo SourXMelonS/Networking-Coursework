@@ -31,7 +31,7 @@ void Player::Init()
 	playerBody.setOutlineThickness(2);
 	playerBody.setOutlineColor(sf::Color(0, 0, 0, 255));
 	playerBody.setFillColor(sf::Color(255, 0, 0, 255));
-	//collisionBox = FloatRect(0, 0, 16, 32);
+	setCollisionBox(0, 0, 16, 32);
 	srand(time(NULL));
 }
 
@@ -39,36 +39,32 @@ void Player::handleInput(Input* input,float dt)
 {
 	if (input->isKeyDown(sf::Keyboard::A))
 	{
-		if (velocity.x <= 20)
-			velocity.x += 2;
+		move(-20 * dt, 0);
 	}
 	if (input->isKeyDown(sf::Keyboard::D))
 	{
-		if (velocity.x >= -20)
-			velocity.x -= 2;
+		move(20 * dt, 0);
 		
 	}
 	if (input->isKeyDown(sf::Keyboard::W))
 	{
-		if(velocity.y <= 20)
-			velocity.y += 2;
+		move(0, -20 * dt);
 	}
 	if (input->isKeyDown(sf::Keyboard::S))
 	{
-		if (velocity.y >= -20)
-			velocity.y -= 2;
+		move(0, 20 * dt);
 	}
 	else
 	{
-		//velocity = sf::Vector2f(0, 0);
+		velocity = sf::Vector2f(0, 0);
 	}
 }
 
 void Player::update(float dt)
 {
 	//velocity += gravity * dt * scale / 2.f;
-	//playerBody.setPosition(getPosition().x + 4, getPosition().y + 4);
-	move(velocity * dt);
+	playerBody.setPosition(getPosition().x + 4, getPosition().y + 4);
+	//move(velocity * dt);
 }
 
 void Player::collisionResponce(GameObject* collider)

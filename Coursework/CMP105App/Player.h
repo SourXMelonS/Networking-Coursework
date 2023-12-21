@@ -21,14 +21,16 @@ public:
 	void handleInput(Input* input,float dt);
 	void update(float dt);
 	void collisionResponce(GameObject* collider);
+	
 
 	RectangleShape playerBody;
 	FloatRect getCollisionBox();
 	void render(sf::RenderWindow* window_);
 
 	Vector2f playerStartPos;
+	//Vector2f playerDirection;
 	Vector2f playerPos;
-	Vector2f playerNextPos;
+	//Vector2f playerNextPos;
 	Vector2f nextPos = Vector2f(0, 0);		
 
 	float tempT;				
@@ -37,7 +39,6 @@ public:
 private:
 	//RenderWindow* window;
 	Texture txtr;
-
 	
 };
 
