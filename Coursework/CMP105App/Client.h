@@ -23,6 +23,7 @@ public:
 	void Render();
 	void disconnect(Player* p, Input* input);		//Disconnect once esc is pressed
 	void Setup(Player* p);
+	void RenderBackgound();
 
 	void sendMessageTCP(Player* p);		//------------------------------------------TCP FUNCTIONS
 	void TCPReceive();
@@ -35,8 +36,9 @@ public:
 	void CheckCollision(Player* p);
 
 	void askSetup();
-	void generateCoin(sf::Vector2f coinPos_[20]);
-	void coinPosGetter();
+	void generateCoin();
+	void coinPosGetterTCP();
+	void coinPosGetterUDP();
 	bool getConnectedStatus();
 
 	Coins coins[20];
@@ -51,6 +53,7 @@ public:
 protected:
 	std::string name;
 	std::string userText;
+	std::string timeDisplay;
 	sf::Font font;
 
 	sf::TcpSocket* socket;
@@ -61,28 +64,28 @@ protected:
 	Input* input;
 
 	sf::Text drawText;
-	sf::Text timerStart;
-	sf::Text waitForPlayers;
+	sf::Text timeText;
+	sf::Text scoreText;
+
 	sf::Clock clock;
-	sf::Clock clockGameStart;
-	sf::Time timeGameStart;
 	sf::RenderWindow* window_;
-	sf::Vector2f final_interp_pos;
 
 	unsigned short udp_port;
 
 	int id_getter;
+	int coins_picked_up =0;
 	bool connected_;
-	bool open_chat;		//Bool for knowing if the chat is open
-	bool chat_empty_on_open;	//Bool for properly switch vars
+	bool open_chat;		
+	bool chat_empty_on_open;	
 	bool is_chat_open = false;
-	bool render_preStart = true;
-	bool canMove = false;
-	bool renderGameStartedElements = false;
 	float lerpAlpha;
 	float deltaTime;
+
 	Vector2f coinPos[20];
-	enum dataInfo				//Enum to avoid putting only numbers in the different packet types
+	Player player;
+	std::vector<Player>opponents;
+
+	enum dataInfo				
 	{
 		askForSetup = 19,
 		sendPlayerPos = 3,
@@ -96,10 +99,7 @@ protected:
 		coinPositions = 2
 	};
 
-	Player player;
-	
-	std::vector<Player>opponents;
+	float score;
 	float gameTime;
-	float speed;
 };
 

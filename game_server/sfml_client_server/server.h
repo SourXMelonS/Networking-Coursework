@@ -3,26 +3,27 @@
 #include <string>
 #include <iostream>
 #include <list>
-#include<thread>
+#include <thread>
 class server
 {
 public:
 	void Init();
 	void Update();
 				
-	//UDP
+	//TCP
 	void TCP();
 	void TCPCommunicationHandler();
 	void TCPMessageRecSend();
-	void sendStartGame(sf::TcpSocket* sock);
-	void IdAndPositionSetter(sf::TcpSocket* sock, std::string name_);
+	void sendStartGame(sf::TcpSocket* socket_);
+	void IdAndPositionSetter(sf::TcpSocket* socket_, std::string name_);
+	void CoinRandomise();
 			
-	//TCP
+	//UDP
 	void UDP();
 	void BindUDP();
 	void receiveUDP();
-	void sendUDP(sf::Packet receivePosVar,int ID);
-	void coinPickedEvent(sf::Packet pack, int id);
+	void sendUDP(sf::Packet receivePos_,int id_);
+	void coinPickedEvent(sf::Packet packet_, int id_);
 	//void checkDisconnections(sf::TcpSocket* sock);
 	void sendTime();
 
@@ -34,13 +35,12 @@ protected:
 	sf::SocketSelector selector;
 	std::vector<sf::TcpSocket*>clients;
 
-
-	int id_setter=26;
+	int coins_picked = 0;
+	int id_setter = 0;
 	bool connected;
-	int tcp_port;
-	unsigned short udp_port;
-	bool server_started;
-					//Struct for each player
+	unsigned short UDP_port;
+
+	//Struct for each player
 	struct Player
 	{
 		sf::Vector2f startPos;
@@ -54,17 +54,16 @@ protected:
 	//Different clocks
 	sf::Clock startGameClock;
 	sf::Clock gameClock;
-	sf::Clock discCheckClock;
-	sf::Clock howOftenSendGameTime;
+	sf::Clock sendGameTime;
 
 	bool gameStarted = false;
 
 	float gameTime;
 	bool gameStart = true;
-	sf::Packet boxPosPacket;
-	bool genDone=false;
+	sf::Packet coinPositionPacket;
+	bool generationDone=false;
 
-	sf::Vector2f coinPos[10];			//how many coins
+	sf::Vector2f coinPos[20];			//how many coins
 
 	enum types
 	{

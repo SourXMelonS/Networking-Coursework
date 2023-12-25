@@ -12,7 +12,6 @@ Client::Client(sf::IpAddress& ip, unsigned short& port, Player& p, std::string& 
 	Setup(&p);
 	udp_port = 54000;
 	name = name_;
-	canMove = true;
 	input = input_;
 }
 
@@ -41,86 +40,12 @@ void Client::Update(Input* input_, sf::Event* Ev,Player* player_, float dt)
 
 	disconnect(player_, input_);
 
-}
+	generateCoin();
 
-/*void Client::Init()
-{
-	sf::IpAddress ip_;
-	ip_ = ip_.getLocalAddress();
-	sf::TcpSocket socket;
-	bool done = false;
-	std::string id;
-	std::string text = "";
-
-	std::cout << "enter name: ";
-	std::cin >> id;
-
-	socket.connect(ip_, 10);
-	sf::RenderWindow window(sf::VideoMode(800, 600, 32), "Chat");
-	std::vector <sf::Text>chat;
-
-	sf::Packet packet;
-	packet << id;
-	socket.send(packet);
-	socket.setBlocking(false);
-	window.setTitle(id);
-
-	sf::Font font;
-	font.loadFromFile("arial.ttf");
-	while (!done)
-	{
-		sf::Event Event;
-		while (window.pollEvent(Event))
-		{
-			switch (Event.type)
-			{
-			case sf::Event::Closed:
-				window.close();
-			case::sf::Event::KeyPressed:
-				if (Event.key.code == sf::Keyboard::Escape)
-					window.close();
-				else if (Event.key.code == sf::Keyboard::Return)
-				{
-					sf::Packet packet;
-					packet << id + ": " + text;
-					socket.send(packet);
-					sf::Text displayText(text, font, 20);
-					displayText.setFillColor(sf::Color::Red);
-					chat.push_back(displayText);
-					text = "";
-				}
-				break;
-			case sf::Event::TextEntered:
-				text += Event.text.unicode;
-				//	break;
-			}
-		}
-		sf::Packet packet;
-		socket.receive(packet);
-		std::string temptext;
-		if (packet >> temptext)
-		{
-			sf::Text displayText(temptext, font, 20);
-			displayText.setFillColor(sf::Color::Blue);
-			chat.push_back(displayText);
-		}
-		int i = 0;
-		for (i; i < chat.size(); i++)
-		{
-			chat[i].setPosition(0, i * 20);
-			window.draw(chat[i]);
-		}
-		sf::Text drawText(text, font, 20);
-		drawText.setFillColor(sf::Color::Red);
-		drawText.setPosition(0, i * 20);
-		window.draw(drawText);
-		//std::cout << "text is being rendered";
-		window.display();
-		window.clear();
-	}
+	timeText.setString("Game time: " + std::to_string(gameTime));
+	scoreText.setString("Score: " + std::to_string(score));
 
 }
-*/
 
 void Client::HandleInput(sf::Event* Ev, Input* input, Player* p)
 {
@@ -182,7 +107,10 @@ void Client::HandleInput(sf::Event* Ev, Input* input, Player* p)
 
 void Client::Render()
 {
+	window_->draw(timeText);
+	window_->draw(scoreText);
 	textSetup(window_);
+
 	for (int i = 0; i < 20; i++)
 	{
 		coins[i].Render(window_);
@@ -191,10 +119,29 @@ void Client::Render()
 
 void Client::disconnect(Player* p, Input* input)
 {
+	sf::Packet temp;
+	int id = id_getter;
+
+	temp << sendDisconnection;
+	temp << id;
+
+	if (input->isKeyDown(sf::Keyboard::Escape))
+	{
+		if (udp_socket.send(temp, Ip_serverAddress, udp_port) != sf::Socket::Done)
+		{
+			std::cout << "Cannot send disconnect to server"<<std::endl;
+		}
+		else
+		{
+			std::cout << "Disconnect" << std::endl;
+			window_->close();
+		}
+	}
 }
 
 void Client::Setup(Player* p)
 {
+	score = 0;
 	font.loadFromFile("font/arial.ttf");			//Initialisation of different texts.
 	udp_socket.setBlocking(false);			//Udp set to non blocking. (it doesn't wait for an event to happen.)
 	socket->setBlocking(false);			//TCP set to non blocking.
@@ -202,8 +149,24 @@ void Client::Setup(Player* p)
 	connected_ = true;		//Know whether client is connected
 	chat_empty_on_open = false;			//Empties chat when t is pressed and the chat opens
 	is_chat_open = false;		//Variable to know whether chat is open
-	speed = 150;
 	p->setPosition(player.playerStartPos.x, player.playerStartPos.y);
+	RenderBackgound();
+}
+
+void Client::RenderBackgound()
+{
+	timeText.setFont(font);
+	timeText.setCharacterSize(50);
+	timeText.setFillColor(Color::Black);
+	timeText.setPosition(window_->getSize().x / 2, 100);
+	timeText.setString("");
+
+	scoreText.setFont(font);
+	scoreText.setCharacterSize(45);
+	scoreText.setFillColor(Color::Black);
+	scoreText.setPosition(10, 100);
+	scoreText.setString("");
+
 }
 
 void Client::sendMessageTCP(Player* p)
@@ -227,11 +190,7 @@ void Client::TCPReceive()
 	{
 		int type = 0;
 		startGame >> type;
-		if (type == startGameType)
-		{
-			render_preStart = false;
-			renderGameStartedElements = true;
-		}
+		
 		if (type == chatReceived)
 		{
 			std::string temptext;
@@ -265,7 +224,7 @@ void Client::ID_And_Positions_Getter()
 		}
 	}
 
-	coinPosGetter();
+	coinPosGetterTCP();
 }
 
 void Client::textSetup(sf::RenderWindow* window)
@@ -297,26 +256,26 @@ void Client::textSetup(sf::RenderWindow* window)
 
 void Client::UDP_sendPosition(Player* p, Input* input, float dt)
 {
-	sf::Time time1 = clock.getElapsedTime();			//Timer to keep track of how often we send the positions
+	sf::Time time1 = clock.getElapsedTime(); //Timer to keep track of how often positions are sent
 	sf::Packet temp;
-	temp << sendPlayerPos;		//Type of UDP packet is three
+	temp << sendPlayerPos; //set type to playerpos
 	float posX = p->getPosition().x;
 	float posY = p->getPosition().y;
-	if (open_chat == false)	//prevents player from moving if chat is open
+	if (open_chat == false)	//stops player from moving if chat is open
 	{
 		p->handleInput(input,dt);
 	}
-	if (time1.asSeconds() >= 0.01)		//How often send the position of the player.
+	if (time1.asSeconds() >= 0.01) //How often send the position of the player.
 	{
 		temp << id_getter << posX << posY;
-		if (udp_socket.send(temp, Ip_serverAddress, udp_port) != sf::Socket::Done)			//Send to the UDP socket.
+		if (udp_socket.send(temp, Ip_serverAddress, udp_port) != sf::Socket::Done)//Try to send through socket.
 		{
 			printf("message can't be sent\n");
 		}
 		else if (time1.asSeconds() >= 0.01)
 		{
 		}
-		clock.restart();			//Restart clock.
+		clock.restart();
 	}
 }
 
@@ -324,13 +283,15 @@ void Client::UDPReceive(Player* p)
 {
 	sf::IpAddress sender;
 	sf::Packet updated_pos;
-	int opponentID;
+	int opponentID = 0;
 	int type = 0;
 
 	unsigned short port = udp_port;
 	while (udp_socket.receive(updated_pos, sender, port) == sf::Socket::Done)
 	{
 		updated_pos >> type;
+		//std::cout << type;
+		
 		if (type == gameTimeReceive)			//Updated game Time
 		{
 			updated_pos >> gameTime;
@@ -365,16 +326,21 @@ void Client::UDPReceive(Player* p)
 				}															//	m_Messages.push_back(Player2.next_pos);					//Message history for prediction.
 			}
 		}
+		if (type == coinHasBeenPicked)				//SOMEONE PICKED A COIN
+		{
+			int coinNum = 0;
+			updated_pos >> opponentID;
+			updated_pos >> coinNum;
+			coins_picked_up++;
+			coins[coinNum].setPickedUp(true);
+		}
+		if (coins_picked_up > 14)
+		{
+			coinPosGetterUDP();
+		}
 	}
 	
-	if (type == coinHasBeenPicked)				//SOMEONE PICKED A COIN
-	{
-		int coinNum;
-		updated_pos >> opponentID;
-		updated_pos >> coinNum;
-		
-		coins[coinNum].setPickedUp(true);
-	}
+	
 }
 sf::Vector2f lerp(sf::Vector2f oldPos, sf::Vector2f newPos, float alpha)		//interpolation function
 {
@@ -391,7 +357,23 @@ void Client::interpolateOpponentPos(Player* opponent, float dt)
 
 void Client::CheckCollision(Player* p)
 {
-	
+	for (int i = 0; i < 20; i++)
+	{
+		if (coins[i].getPickedUp() == false)
+		{
+			if (Collision::checkBoundingBox(p, &coins[i]))
+			{
+				sf::Packet coinPickedPacket;
+				int type = 8;
+				coinPickedPacket << type << id_getter << i;
+				if (udp_socket.send(coinPickedPacket, Ip_serverAddress, udp_port) == sf::Socket::Done)		//Check for collisions, if collision happens lets server know 
+				{
+					coins[i].setPickedUp(true);
+					score++;
+				}
+			}
+		}
+	}
 }
 
 void Client::askSetup()
@@ -405,13 +387,26 @@ void Client::askSetup()
 	}
 }
 
-void Client::generateCoin(sf::Vector2f coinPos_[20])
+void Client::generateCoin()
 {
-	Coins coin;
-	coin.setPosition(coinPos_->x, coinPos_->y);
-	coin.Update();
+	int pickedUp = 0;
+	for (int i = 0; i <= 20; i++)
+	{
+		if (coins[i].getPickedUp() == true)
+		{
+			pickedUp++;
+		}
+	}
+	if (pickedUp >= 15)
+	{
+		for (int i = 0; i < 20; i++)
+		{
+			coins[i].setPickedUp(false);
+		}
+	}
+
 }
-void Client::coinPosGetter()
+void Client::coinPosGetterTCP()
 {
 	sf::Packet CoinposGetter;			//Starting positions of coins
 	if (socket->receive(CoinposGetter) != sf::Socket::Done)
@@ -436,7 +431,36 @@ void Client::coinPosGetter()
 		}
 	}
 }
-
+void Client::coinPosGetterUDP()
+{
+	sf::IpAddress sender;
+	sf::Packet CoinposGetter;
+	unsigned short port = udp_port;
+	//Starting positions of coins
+	if(udp_socket.receive(CoinposGetter,sender,port) != sf::Socket::Done)
+	{
+		//std::cout << "Error getting ID\n";
+	}
+	else
+	{
+		int type = 0;
+		CoinposGetter >> type;
+		std::cout << type;
+		if (type == coinPositions)
+		{
+			for (int i = 0; i < 20; i++)			//Coin generation loop
+			{
+				CoinposGetter >> coinPos[i].x;
+				CoinposGetter >> coinPos[i].y;
+				std::cout << coinPos[i].x << "  -  " << coinPos[i].y << std::endl;
+				coins[i].setPosition(coinPos[i].x, coinPos[i].y);
+				std::cout << coins[i].getPosition().x << "  -  " << coins[i].getPosition().y << std::endl;
+				coins[i].Update();
+			}
+		}
+		coins_picked_up = 0;
+	}
+}
 bool Client::getConnectedStatus()
 {
 	return connected_;

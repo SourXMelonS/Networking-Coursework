@@ -39,20 +39,20 @@ void Player::handleInput(Input* input,float dt)
 {
 	if (input->isKeyDown(sf::Keyboard::A))
 	{
-		move(-20 * dt, 0);
+		move(-40 * dt, 0);
 	}
 	if (input->isKeyDown(sf::Keyboard::D))
 	{
-		move(20 * dt, 0);
+		move(40 * dt, 0);
 		
 	}
 	if (input->isKeyDown(sf::Keyboard::W))
 	{
-		move(0, -20 * dt);
+		move(0, -40 * dt);
 	}
 	if (input->isKeyDown(sf::Keyboard::S))
 	{
-		move(0, 20 * dt);
+		move(0, 40 * dt);
 	}
 	else
 	{

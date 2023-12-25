@@ -28,9 +28,6 @@ void Menu::Init()
 
 	renderJoinGame = false;
 	ipNameStr = "IP";
-	//backgroundTexture.loadFromFile("gfx/....png");
-	//backgroundTexture
-	//hostTexture.loadFromFile("gfx/....png");
 	joinTexture.loadFromFile("gfx/join.png");
 	exitTexture.loadFromFile("gfx/exit.png");
 
@@ -44,31 +41,31 @@ void Menu::Init()
 	gameName.setFont(font);
 	gameName.setCharacterSize(90);
 	gameName.setFillColor(Color::Color(255, 176, 102));
-	gameName.setPosition(window->getSize().x / 2 - 450, 100);
-	gameName.setString("Generic Racing Game");
+	gameName.setPosition(window->getSize().x / 2 - 550, 100);
+	gameName.setString("Generic Coin Collect Game");
 
 	ipEnter.setFont(font);
 	ipEnter.setCharacterSize(50);
 	ipEnter.setFillColor(Color::Color(255, 255, 255));
-	ipEnter.setPosition(window->getSize().x / 2 - 100, 300);
+	ipEnter.setPosition(window->getSize().x / 4 - 100, 300);
 	ipEnter.setString("Type Ip address to connect to");
 
 	nameEnter.setFont(font);
 	nameEnter.setCharacterSize(50);
 	nameEnter.setFillColor(Color::Color(255, 255, 255));
-	nameEnter.setPosition(window->getSize().x / 2 - 100, 400);
+	nameEnter.setPosition(window->getSize().x / 4 - 100, 400);
 	nameEnter.setString("Type the name you would like to use");
 
 	ipDisplay.setFont(font);
 	ipDisplay.setCharacterSize(50);
 	ipDisplay.setFillColor(Color::Color(255, 255, 255));
-	ipDisplay.setPosition(window->getSize().x / 2 - 100, 350);
+	ipDisplay.setPosition(window->getSize().x / 4 - 100, 350);
 	
 
 	nameDisplay.setFont(font);
 	nameDisplay.setCharacterSize(50);
 	nameDisplay.setFillColor(Color::Color(255, 255, 255));
-	nameDisplay.setPosition(window->getSize().x / 2 - 100, 450);
+	nameDisplay.setPosition(window->getSize().x / 4 - 100, 450);
 	
 
 }
@@ -79,27 +76,6 @@ void Menu::handleInput(float dt)
 
 void Menu::handleInput(sf::Event* event_ )
 {
-	/*
-	if (gameState->getCurrentState() == State::MENU)
-	{
-		if (Collision::checkBoundingBox(&joinButton, (Vector2i(input->getMouseX(), input->getMouseY()))) && (input->isLeftMouseDown()))
-		{
-			audio->stopAllMusic();
-			gameState->setCurrentState(State::HOST);
-		}
-		if (Collision::checkBoundingBox(&playButton, (Vector2i(input->getMouseX(), input->getMouseY()))) && (input->isLeftMouseDown()))
-		{
-			audio->stopAllMusic();
-			gameState->setCurrentState(State::JOIN);
-			std::cout << "joining\n";
-		}
-		//If the player clicks on exit the game closes
-		if (Collision::checkBoundingBox(&exitButton, (Vector2i(input->getMouseX(), input->getMouseY()))) && (input->isLeftMouseDown()))
-		{
-			window->close();
-		}
-	}
-	*/
 	
 		sf::Vector2u window_size = window->getSize();
 		if (input->isKeyDown(sf::Keyboard::Escape))
@@ -188,19 +164,6 @@ void Menu::update(float dt)
 void Menu::render()
 {
 	//Game title
-	
-	/*if (gameState->getCurrentState() == State::MENU)
-	{
-		beginDraw();
-		window->draw(menuBackground);
-		window->draw(gameName);
-		window->draw(joinButton);
-		window->draw(playButton);
-		window->draw(exitButton);
-		endDraw();
-	}*/
-	// (gameState->getCurrentState() == State::JOIN)
-	//{
 		beginDraw();
 		window->draw(menuBackground);
 		window->draw(gameName);
@@ -213,7 +176,7 @@ void Menu::render()
 			window->draw(joinButton);
 		}
 		endDraw();
-	//}
+	
 }
 
 void Menu::reset()

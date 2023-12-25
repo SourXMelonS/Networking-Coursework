@@ -4,7 +4,7 @@ void server::Init()
 {
 	std::cout << "The local server address is: \n" << sf::IpAddress::getLocalAddress()<<"\n";			//Local address for local connection and testing
 	std::cout << "The public server address is: \n" << sf::IpAddress::getPublicAddress() <<"\n";		//Public address to test outside local connection
-	udp_port= 54000;			//UDP port hardcoded
+	UDP_port= 54000;			//UDP port hardcoded
 	listener.listen(53000);			//TCP port hardcoded
 	listener.setBlocking(false);			//Listener doesn't block so that it doesn't stop events from happening 
 	selector.add(listener);			//Selector adds listener, necessary for multiple connections
@@ -15,7 +15,7 @@ void server::Init()
 
 void server::Update()
 {
-
+	
 	bool done = false;
 	while (!done)		//infinite loop
 	{
@@ -141,6 +141,7 @@ void server::receiveUDP()			//UDP received function.
 		}
 		else if (type == coinPicked)
 		{
+			
 			coinPickedEvent(receivePos, id);			//If someone picked a coin.
 		}
 	}
@@ -186,7 +187,8 @@ void server::coinPickedEvent(sf::Packet pack, int id)		//Called when a coin is p
 	int coinNum = 0;
 	int type = coinPickedsendToClients;
 	pack >> coinNum;		//Extract the coin that has been collected
-	std::cout << id << " collected coin:" << coinNum << "\n";		//Display who picked which coin
+	coins_picked++;
+	std::cout << id << " collected coin:" << coinNum << "\n coins picked: "<<coins_picked<<std::endl;		//Display who picked which coin
 	sf::Packet coin_Picked;		//
 	coin_Picked << type;		//send back to all the players
 	coin_Picked << id;
@@ -202,6 +204,20 @@ void server::coinPickedEvent(sf::Packet pack, int id)		//Called when a coin is p
 		else
 		{
 			//std::cout << "Positions of players have been successfully sent \n";
+			if (coins_picked > 15)
+			{
+				
+				CoinRandomise();
+				if (UDP_socket.send(coinPositionPacket, address, port) != sf::Socket::Done)		//Send positions of coins to clients.
+				{
+					std::cout << "Error sending message. \n";
+				}
+				else
+				{
+
+				}
+				coins_picked = 0;
+			}
 		}
 	}
 }
@@ -224,8 +240,8 @@ void server::IdAndPositionSetter(sf::TcpSocket* sock, std::string name_)			//Cal
 
 			for (int i = 0; i < Players.size(); i++)			//Positions are created randomly
 			{
-				Players[i].startPos.x = static_cast <float> (rand() % 800);
-				Players[i].startPos.y = static_cast <float> (rand() % 400);
+				Players[i].startPos.x = static_cast <float> (rand() % 1200);
+				Players[i].startPos.y = static_cast <float> (rand() % 675);
 				Id_And_Pos_Setter << Players[i].startPos.x << Players[i].startPos.y;		//And put in the packet.
 			}
 
@@ -240,23 +256,9 @@ void server::IdAndPositionSetter(sf::TcpSocket* sock, std::string name_)			//Cal
 				id_setter++;
 			}
 
-			int type1 = coinGen;
-			boxPosPacket << type1;
-			if (genDone == false)		//If the generation has not happened, generate all the positions and put them in a packet.
-			{
-				for (int i = 0; i < 20; i++)
-				{
-					float x = static_cast <float> (rand() % 800);
-					float y = static_cast <float> (rand() % 800);
-					coinPos[i].x = x;
-					coinPos[i].y = y;
-					boxPosPacket << coinPos[i].x;
-					boxPosPacket << coinPos[i].y;
-					std::cout << coinPos[i].x << "  -  " << coinPos[i].y << std::endl;
-				}
-				genDone = true;		//This function will be called only once
-			}
-			if (sock->send(boxPosPacket) != sf::Socket::Done)		//Send positions of coins to clients.
+			CoinRandomise();
+
+			if (sock->send(coinPositionPacket) != sf::Socket::Done)		//Send positions of coins to clients.
 			{
 				std::cout << "Error sending message. \n";
 			}
@@ -268,6 +270,27 @@ void server::IdAndPositionSetter(sf::TcpSocket* sock, std::string name_)			//Cal
 		}
 	}
 	
+}
+
+void server::CoinRandomise()
+{
+	srand(time(NULL));
+	int type1 = coinGen;
+	coinPositionPacket << type1;
+	if (generationDone == false || coins_picked >= 15)		//If the generation has not happened, generate all the positions and put them in a packet.
+	{
+		for (int i = 0; i < 20; i++)
+		{
+			float x = static_cast <float> (rand() % 1200);
+			float y = static_cast <float> (rand() % 675);
+			coinPos[i].x = x;
+			coinPos[i].y = y;
+			coinPositionPacket << coinPos[i].x;
+			coinPositionPacket << coinPos[i].y;
+			std::cout << coinPos[i].x << "  -  " << coinPos[i].y << std::endl;
+		}
+		generationDone = true;		//This function will be called only once
+	}
 }
 
 
@@ -306,7 +329,7 @@ void server::sendTime()		//SENDS TIME TO ALL CLIENTS, TIME WILL STARTS WHEN AT L
 			gameClock.restart();
 			gameStart = false;
 		}
-		sf::Time gameSendTime = howOftenSendGameTime.getElapsedTime();	
+		sf::Time gameSendTime = sendGameTime.getElapsedTime();	
 		int typeGameClock = sendTimeType;
 		sf::Packet gameTimer;
 		gameTime += gameClock.restart().asSeconds();
@@ -328,7 +351,7 @@ void server::sendTime()		//SENDS TIME TO ALL CLIENTS, TIME WILL STARTS WHEN AT L
 					//std::cout << "Positions of players have been successfully sent \n";
 				}
 			}
-			howOftenSendGameTime.restart();		//Restart timer
+			sendGameTime.restart();		//Restart timer
 		}
 	}
 }
@@ -336,7 +359,7 @@ void server::sendTime()		//SENDS TIME TO ALL CLIENTS, TIME WILL STARTS WHEN AT L
 void server::BindUDP()
 {
 	// bind the socket to a port
-	if (UDP_socket.bind(udp_port) != sf::Socket::Done)
+	if (UDP_socket.bind(UDP_port) != sf::Socket::Done)
 	{
 		printf("Error binding UDP\n");
 	}
