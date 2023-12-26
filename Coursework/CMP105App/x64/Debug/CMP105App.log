@@ -1,16 +1,16 @@
 ﻿  Client.cpp
-C:\Users\camer\OneDrive\Documents\GitHub\Cmp303-coursework\Coursework\CMP105App\Client.cpp(161,44): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\camer\OneDrive\Documents\GitHub\Cmp303-coursework\Coursework\CMP105App\Client.cpp(157,44): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=unsigned int
           ]
-C:\Users\camer\OneDrive\Documents\GitHub\Cmp303-coursework\Coursework\CMP105App\Client.cpp(233,22): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+C:\Users\camer\OneDrive\Documents\GitHub\Cmp303-coursework\Coursework\CMP105App\Client.cpp(229,22): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\camer\OneDrive\Documents\GitHub\Cmp303-coursework\Coursework\CMP105App\Client.cpp(241,40): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\camer\OneDrive\Documents\GitHub\Cmp303-coursework\Coursework\CMP105App\Client.cpp(254,46): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\camer\OneDrive\Documents\GitHub\Cmp303-coursework\Coursework\CMP105App\Client.cpp(237,40): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\camer\OneDrive\Documents\GitHub\Cmp303-coursework\Coursework\CMP105App\Client.cpp(250,46): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
           with
           [
               T=unsigned int

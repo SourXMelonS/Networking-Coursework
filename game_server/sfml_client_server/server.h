@@ -24,7 +24,7 @@ public:
 	void receiveUDP();
 	void sendUDP(sf::Packet receivePos_,int id_);
 	void coinPickedEvent(sf::Packet packet_, int id_);
-	//void checkDisconnections(sf::TcpSocket* sock);
+
 	void sendTime();
 
 
@@ -49,7 +49,7 @@ protected:
 		unsigned short portUDP;
 		int clientID;
 	};
-	std::vector<Player> Players;			//Vector of struct
+	std::vector<Player> Players;
 
 	//Different clocks
 	sf::Clock startGameClock;
@@ -63,7 +63,7 @@ protected:
 	sf::Packet coinPositionPacket;
 	bool generationDone=false;
 
-	sf::Vector2f coinPos[20];			//how many coins
+	sf::Vector2f coinPos[20]; //Coins
 
 	enum types
 	{

@@ -10,7 +10,6 @@ Level::Level(sf::RenderWindow* hwnd, Input* in, GameState* gs, AudioManager* aud
 	audio = aud;
 	connected_succesfully = false;
 	Tcp = sock;
-	// initialise game objects
 
 }
 
@@ -89,11 +88,4 @@ void Level::render()
 		opponents.at(i).render(window);
 	endDraw();
 }
-
-
-
-//Player Level::getPlayer(int player_)
-//{
-	//return player[player_];
-//}
 

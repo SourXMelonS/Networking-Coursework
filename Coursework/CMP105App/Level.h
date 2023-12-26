@@ -23,7 +23,7 @@ public:
 
 	bool getConnectedStatus() { return connected_succesfully; };
 private:
-	// Default functions for rendering to the screen.
+
 
 	bool connected_succesfully;
 	std::unique_ptr<Client> client_;
@@ -41,6 +41,6 @@ private:
 	Font font;
 	Text controls, speedText;
 	View gameView;
-	// Default variables for level class.
+
 	
 };

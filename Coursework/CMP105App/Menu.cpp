@@ -82,9 +82,9 @@ void Menu::handleInput(sf::Event* event_ )
 		{
 			window->close();
 		}
-		if (event_->type == sf::Event::TextEntered)		//Text is being entered
+		if (event_->type == sf::Event::TextEntered)	//Text is being entered
 		{
-			if (ipNameStr == "IP")				//IP text selected and entered
+			if (ipNameStr == "IP") //IP text selected and entered
 			{
 				if (32 < event_->text.unicode && event_->text.unicode < 128)
 				{
@@ -92,7 +92,7 @@ void Menu::handleInput(sf::Event* event_ )
 					std::cout << event_->text.unicode;
 				}
 			}
-			else if (ipNameStr == "Name")	//name text selected and entered
+			else if (ipNameStr == "Name") //Name text selected and entered
 			{
 				if (32 < event_->text.unicode && event_->text.unicode < 128)
 				{
@@ -163,7 +163,7 @@ void Menu::update(float dt)
 }
 void Menu::render()
 {
-	//Game title
+	//Render menu
 		beginDraw();
 		window->draw(menuBackground);
 		window->draw(gameName);
@@ -185,7 +185,7 @@ void Menu::reset()
 
 void Menu::enterName(sf::Event* event_)
 {
-	if (event_->key.code == sf::Keyboard::Return)		//Send message on enter
+	if (event_->key.code == sf::Keyboard::Return) //Send message on enter
 	{
 		nameEnter.setFillColor(sf::Color::Green);
 		sf::Packet name_sent;
@@ -193,31 +193,30 @@ void Menu::enterName(sf::Event* event_)
 		connect_attempt = true;
 		ipNameStr == "";
 
-		sf::Socket::Status Tcp_Stat = Tcp->connect(server_Ip, 53000);			//Once name is entered, connect to IP and port
+		sf::Socket::Status Tcp_Stat = Tcp->connect(server_Ip, 53000); //Connect to IP and port
 		if (Tcp_Stat != sf::Socket::Done)
 		{
 			printf("Client couldn't connect'\n");
 			printf("Server could be full, non existing or under maintenance\n");
-			Init();			//If connection couldn't happen, restart menu
+			Init();	//If connection couldn't happen, restart menu
 		}
 		else
 		{
-			//If you managed to connect
+		
 		}
 		{
-
-			std::cout << "IS IT CONNECTED " << "\n";
-			sendNameTCP();			//send name to server
-			gameState->setCurrentState(State::LEVEL);			//Enter in game and game is started.
+			//std::cout << "IS IT CONNECTED " << "\n";
+			sendNameTCP(); //send name to server
+			gameState->setCurrentState(State::LEVEL); //Change to level and game has started.
 		}
 
 	}
-	else if (event_->key.code == sf::Keyboard::BackSpace)		//Removes last letter in the message in the chat
+	else if (event_->key.code == sf::Keyboard::BackSpace) //Removes last letter in the message in the chat
 	{
 		if (nameEnterStr.size() > 0)
 			nameEnterStr.pop_back();
 	}
-	else if (event_->key.code == sf::Keyboard::Space)		//Space added
+	else if (event_->key.code == sf::Keyboard::Space) //Space added
 	{
 		nameEnterStr += ' ';
 	}
@@ -225,20 +224,20 @@ void Menu::enterName(sf::Event* event_)
 
 void Menu::enterIp(sf::Event* event_)
 {
-	if (event_->key.code == sf::Keyboard::Return)		//Send message on enter
+	if (event_->key.code == sf::Keyboard::Return) //Send message on enter
 	{
 		server_Ip = sf::IpAddress(ipEnterStr);
 		//ipAdress_server = sf::IpAddress::getLocalAddress();
 		ipDisplay.setFillColor(sf::Color::Green);
 		ipNameStr = "Name";
-		renderJoinGame = true;		//Once IP is entered, enter name and render the button to join the game
+		renderJoinGame = true; //Once IP is entered, enter name 
 	}
-	else if (event_->key.code == sf::Keyboard::BackSpace)		//Removes last letter in the message in the chat
+	else if (event_->key.code == sf::Keyboard::BackSpace) //Removes last letter in the message in the chat
 	{
 		if (ipEnterStr.size() > 0)
 			ipEnterStr.pop_back();
 	}
-	else if (event_->key.code == sf::Keyboard::Space)		//Space added
+	else if (event_->key.code == sf::Keyboard::Space) //Space added
 	{
 		ipEnterStr += ' ';
 	}
@@ -252,7 +251,7 @@ void Menu::sendNameTCP()
 	name_sender << type;
 	name_sender << nameEnterStr;
 	std::cout << nameEnterStr << std::endl;
-	if (Tcp->send(name_sender) != sf::Socket::Done)
+	if (Tcp->send(name_sender) != sf::Socket::Done) //Send name to the server
 	{
 		std::cout << "Error setting up\n";
 	}

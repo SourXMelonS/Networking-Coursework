@@ -20,7 +20,7 @@ void windowProcess(sf::RenderWindow* window, Input* in)
 int main()
 {
 	//Create the window
-	sf::RenderWindow window(sf::VideoMode(1200, 675), "CMP303_Racing_Game");
+	sf::RenderWindow window(sf::VideoMode(1200, 675), "CMP303_Coin_Game");
 	sf::TcpSocket Tcp;
 
 	// Initialise input and level objects.
